@@ -27,6 +27,8 @@ class CamHandler(BaseHTTPRequestHandler):
                 except socket.error as ex:
                     print("Pipe closed: " + ex.args[1] if len(ex.args >= 2) else "")
                     break
+                except KeyboardInterrupt:
+                    break
             return
         elif self.path.endswith('.html'):
             self.send_response(200)
