@@ -1,9 +1,27 @@
 <html>
-<head></head>
+<head>
+    <link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
+</head>
 <body>
-<img id="p" src="http://127.0.0.1:8080/cam.mjpg"/>
-<script>
-    document.getElementById("p").src="http://" + window.location.host + "/cam.mjpg";
-</script>
+    <img id="p" src=""/>
+    <script>
+        function get_src() {
+            return "http://" + window.location.host + "/cam.mjpg?dt=" + (new Date().getTime());
+        }
+
+        function sleep(duration) {
+            var now = new Date().getTime();
+            while(new Date().getTime() < now + duration){}
+        }
+
+        var img = document.getElementById("p");
+
+        img.onload = function() {
+            sleep(1000/60)
+            this.src = get_src();
+        }
+
+        img.src = get_src();
+    </script>
 </body>
 </html>
