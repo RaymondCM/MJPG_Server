@@ -1,1 +1,9 @@
-<html><head></head><body><img src="http://127.0.0.1:8080/cam.mjpg"/></body></html>
+<html>
+<head></head>
+<body>
+<img id="p" src="http://127.0.0.1:8080/cam.mjpg"/>
+<script>
+    document.getElementById("p").src="http://" + window.location.host + "/cam.mjpg";
+</script>
+</body>
+</html>
