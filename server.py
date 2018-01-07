@@ -38,7 +38,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main():
-    ip = "127.0.0.1"
+    ip = "0.0.0.0"
     port = 8080
 
     try:
