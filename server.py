@@ -47,8 +47,11 @@ def main():
     port = 8080
 
     try:
+        camera = Camera()
+        Camera.initialize(camera)
+
         def handler(*args):
-            CamHandler(Camera(), *args)
+            CamHandler(camera, *args)
 
         server = ThreadedHTTPServer((ip, port), handler)
 
@@ -56,6 +59,8 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         server.socket.close()
+    finally:
+        camera.schedule_stop()
 
 
 if __name__ == '__main__':

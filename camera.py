@@ -2,7 +2,7 @@ import io
 import threading
 from datetime import datetime
 from time import sleep
-from util import is_linux
+from util import is_linux, raspberrypi, thermal
 if is_linux():
     import picamera
 else:
@@ -12,14 +12,15 @@ else:
 class Camera(object):
     thread = None
     frame = None
-    last_access = 0
-    pi_support = False
+    last_access = datetime.now()
+    device_type = ""
     width = 320
     height = 240
     size = height * width
 
-    def initialize(self):
-        Camera.pi_support = is_linux()
+    def initialize(self, device_type="auto"):
+        if device_type == "auto":
+            self.device_type = "pi" if is_linux() else "cv"
 
         if Camera.thread is None:
             Camera.thread = threading.Thread(target=self._thread)
@@ -32,7 +33,6 @@ class Camera(object):
 
     def get_frame(self):
         Camera.last_access = datetime.now()
-        self.initialize()
         return self.frame
 
     @staticmethod
@@ -45,7 +45,7 @@ class Camera(object):
 
     @classmethod
     def _thread(cls):
-        if cls.pi_support:
+        if cls.device_type == raspberrypi():
             with picamera.PiCamera() as camera:
                 # camera setup
                 camera.resolution = (cls.width, cls.height)
@@ -65,7 +65,10 @@ class Camera(object):
 
                     if cls.should_stop():
                         break
-        else:
+        elif cls.device_type == thermal():
+            # Thermal camera code goes here
+            pass
+        else:  # Default to default system camera device
             capture = cv2.VideoCapture(0)
             success, frame = capture.read()
             cls.height, cls.width = frame.shape[:2]
