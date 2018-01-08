@@ -1,6 +1,6 @@
 import io
 import threading
-from datetime import datetime
+# from datetime import datetime
 from time import sleep
 from util import is_linux, raspberrypi, thermal
 if is_linux():
@@ -12,7 +12,7 @@ else:
 class Camera(object):
     thread = None
     frame = None
-    last_access = datetime.now()
+    # last_access = datetime.now()
     device_type = ""
     width = 320
     height = 240
@@ -39,7 +39,7 @@ class Camera(object):
             return False
 
     def get_frame(self):
-        Camera.last_access = datetime.now()
+        # Camera.last_access = datetime.now()
         return self.frame
 
     def schedule_stop(self):
@@ -48,7 +48,7 @@ class Camera(object):
 
     @staticmethod
     def should_stop(timeout=10):
-        return Camera.thread.stop_event.is_set() or (datetime.now() - Camera.last_access).total_seconds() > timeout
+        return Camera.thread.stop_event.is_set()  # or (datetime.now() - Camera.last_access).total_seconds() > timeout
 
     @classmethod
     def _thread(cls):
