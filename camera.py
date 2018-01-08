@@ -1,16 +1,17 @@
 import io
-import sys
+from sys import modules
 import threading
 # from datetime import datetime
 from time import sleep
 import numpy as np
 
-from util import is_linux, raspberrypi, thermal, default
+from util import default, raspberrypi, is_linux, thermal, lepton_in
 
 if is_linux():
-    import picamera
     try:
         from pylepton.Lepton3 import Lepton3
+        import cv2
+        import picamera
     except ImportError:
         pass
 else:
@@ -27,9 +28,9 @@ class Camera(object):
     size = height * width
 
     def initialize(self, device_type="auto"):
-        print "is_linux()" in sys.modules
+        Camera.device_type = device_type
         if device_type == "auto":
-            Camera.device_type = thermal() if "Lepton3" in sys.modules else raspberrypi() if is_linux() else default()
+            Camera.device_type = thermal() if lepton_in(modules) else raspberrypi() if is_linux() else default()
 
         if Camera.thread is None:
             Camera.thread = threading.Thread(target=self._thread)
@@ -37,10 +38,10 @@ class Camera(object):
             Camera.thread.start()
 
             # Return control to calling class when frame becomes available or when thread terminates
-            print("Camera class initialised with device '{}'".format(device_type))
+            print("Camera class initialised with device '{}'".format(Camera.device_type))
             while self.frame is None and self.thread is not None:
                 sleep(0)
-            print("Returning control to calling class".format(device_type))
+            print("Returning control to calling class")
 
             return self.thread is None
         else:
@@ -86,7 +87,7 @@ class Camera(object):
                 with Lepton3("/dev/spidev0.0") as l:
                     a, _ = l.capture()
 
-                vflip = False
+                vflip = True
                 if vflip:
                     cv2.flip(a, 0, a)
 
