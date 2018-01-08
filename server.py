@@ -43,7 +43,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
 
 
-def main():
+def server():
     parser = argparse.ArgumentParser()
     parser.add_argument("-b", default="0.0.0.0", help="Server IP Address [Default 0.0.0.0]", dest="ip", type=str)
     parser.add_argument("-p", default=8080, help="Server Port [Default: 8080]", dest="port", type=int)
@@ -56,20 +56,23 @@ def main():
 
     try:
         camera = Camera()
-        Camera.initialize(camera, device_type)
+        error = Camera.initialize(camera, device_type)
 
-        def handler(*args):
-            CamHandler(camera, *args)
+        if not error:
+            def handler(*args):
+                CamHandler(camera, *args)
 
-        server = ThreadedHTTPServer((ip, port), handler)
+            threaded_server = ThreadedHTTPServer((ip, port), handler)
 
-        print("Server Started on " + ip + ":" + str(port))
-        server.serve_forever()
+            print("Server Started on " + ip + ":" + str(port))
+            threaded_server.serve_forever()
+        else:
+            print("Failed to initialise device '{}/{}'".format(device_type, camera.device_type))
     except KeyboardInterrupt:
-        server.socket.close()
+        threaded_server.socket.close()
     finally:
         camera.schedule_stop()
 
 
 if __name__ == '__main__':
-    main()
+    server()

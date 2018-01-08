@@ -27,9 +27,16 @@ class Camera(object):
             Camera.thread.stop_event = threading.Event()
             Camera.thread.start()
 
-            # Return control to calling class when frame becomes available
-            while self.frame is None:
+            # Return control to calling class when frame becomes available or when thread terminates
+            print("Camera class initialised with device '{}'".format(device_type))
+            while self.frame is None and self.thread is not None:
                 sleep(0)
+            print("Returning control to calling class".format(device_type))
+
+            return self.thread is None
+        else:
+            print("Camera thread already initialised")
+            return False
 
     def get_frame(self):
         Camera.last_access = datetime.now()
@@ -71,14 +78,19 @@ class Camera(object):
         else:  # Default to default system camera device
             capture = cv2.VideoCapture(0)
             success, frame = capture.read()
-            cls.height, cls.width = frame.shape[:2]
-            cls.size = cls.height * cls.width
 
-            while success:
-                success, frame = capture.read()
-                cls.frame = cv2.imencode('.jpg', frame)[1].tobytes()
+            if success:
+                cls.height, cls.width = frame.shape[:2]
+                cls.size = cls.height * cls.width
 
-                if cls.should_stop():
-                    break
+                while success:
+                    success, frame = capture.read()
+                    cls.frame = cv2.imencode('.jpg', frame)[1].tobytes()
 
+                    if cls.should_stop():
+                        break
+            else:
+                print("Default camera device not found [{}]".format(cls.device_type))
+
+        print("Setting thread to none")
         cls.thread = None
