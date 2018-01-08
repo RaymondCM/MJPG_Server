@@ -20,16 +20,21 @@ optional arguments:
 ```
 
 Run the client python script on any other machine on the network to preview the camera. 
-Alternatively go-to http://192.168.0.XXX:8080/index.html in any modern browser (Change the port and IP accordingly).
+Alternatively go-to http://192.168.0.XXX:8080/index.html in any modern browser (Change the port and IP accordingly). 
+Support for publishing to a ros node has been added also via a command line argument -r.
 
 ```bash
-usage: client.py [-h] [-b IP] [-p PORT] [-w WAIT]
+usage: client.py [-h] [-b IP] [-p PORT] [-w WAIT] [-c BSIZE] [-n NAME]
+                 [-r ROS_SUP]
 
 optional arguments:
   -h, --help  show this help message and exit
   -b IP       Server IP Address [Default 127.0.0.1]
   -p PORT     Server Port [Default: 8080]
   -w WAIT     Wait for frame [Default: False]
+  -c BSIZE    Byte chunk size [Default: 2048]
+  -n NAME     Node name [Default: auto]
+  -r ROS_SUP  Publish on ros node [Default: False]
 ```
 
 ## Installation
