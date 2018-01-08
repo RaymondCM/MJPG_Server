@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-
-import datetime
-from time import sleep
-
+import argparse
+from threading import Thread
 import cv2
 import numpy as np
 from six.moves.urllib import request
-from threading import Thread
 
 
 class MJPGDecoderThread(Thread):
@@ -41,21 +38,32 @@ class MJPGDecoderThread(Thread):
 
 
 def client():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-b", default="0.0.0.0", help="Server IP Address [Default 127.0.0.1]", dest="ip", type=str)
+    parser.add_argument("-p", default=8080, help="Server Port [Default: 8080]", dest="port", type=int)
+    parser.add_argument("-w", default=False, help="Wait for frame [Default: False]", dest="wait", type=bool)
+    results = parser.parse_args()
+
+    ip = results.ip
+    port = results.port
+    mjpg_url = 'http://{}:{}/cam.mjpg'.format(ip, port)
+    wait_for_frame = results.wait  # Set to true to only preview new frames
+
     window_name = "Client Preview"
     cv2.namedWindow(window_name)
-
-    mjpg_url = 'http://192.168.0.155:8080/cam.mjpg'
-    wait_for_frame = False  # Set to true to only preview new frames
 
     try:
         decoder_thread = MJPGDecoderThread(mjpg_url)
         decoder_thread.setName("MJPEG Decoder Thread")
         decoder_thread.start()
 
+        print("Press q in the rendering window to exit")
+
         while True:
             if decoder_thread.new_frame:
                 cv2.imshow(window_name, decoder_thread.frame if wait_for_frame else decoder_thread.get_frame())
-            if cv2.waitKey(1) == ord('q'):
+            key = cv2.waitKey(1)
+            if key == ord('q') or key == ord('Q'):
                 break
     except KeyboardInterrupt:
         print("Shutting down")
@@ -63,6 +71,7 @@ def client():
         cv2.destroyWindow(window_name)
         decoder_thread.join_request = True
         decoder_thread.join()
+
 
 if __name__ == '__main__':
     client()
