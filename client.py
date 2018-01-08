@@ -13,6 +13,7 @@ class MJPGDecoderThread(Thread):
     def __init__(self, url='http://127.0.0.1:8080/cam.mjpg'):
         Thread.__init__(self)
         self.url = url
+        self.byte_chunks = 2048
         self.bytes = bytes()
         self.stream = request.urlopen(self.url)
         self.frame = np.array((1, 1, 3), dtype=np.uint8)
@@ -25,7 +26,7 @@ class MJPGDecoderThread(Thread):
 
     def run(self):
         while True:
-            self.bytes += self.stream.read(1024)
+            self.bytes += self.stream.read(self.byte_chunks)
             start = self.bytes.find(b'\xff\xd8')
             end = self.bytes.find(b'\xff\xd9')
 
