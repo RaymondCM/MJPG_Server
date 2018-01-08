@@ -1,10 +1,18 @@
 import io
+import sys
 import threading
 # from datetime import datetime
 from time import sleep
-from util import is_linux, raspberrypi, thermal
+import numpy as np
+
+from util import is_linux, raspberrypi, thermal, default
+
 if is_linux():
     import picamera
+    try:
+        from pylepton.Lepton3 import Lepton3
+    except ImportError:
+        pass
 else:
     import cv2
 
@@ -19,8 +27,9 @@ class Camera(object):
     size = height * width
 
     def initialize(self, device_type="auto"):
+        print "is_linux()" in sys.modules
         if device_type == "auto":
-            Camera.device_type = "pi" if is_linux() else "cv"
+            Camera.device_type = thermal() if "Lepton3" in sys.modules else raspberrypi() if is_linux() else default()
 
         if Camera.thread is None:
             Camera.thread = threading.Thread(target=self._thread)
@@ -73,8 +82,20 @@ class Camera(object):
                     if cls.should_stop():
                         break
         elif cls.device_type == thermal():
-            # Thermal camera code goes here
-            pass
+            while True:
+                with Lepton3("/dev/spidev0.0") as l:
+                    a, _ = l.capture()
+
+                vflip = False
+                if vflip:
+                    cv2.flip(a, 0, a)
+
+                cv2.normalize(a, a, 0, 65535, cv2.NORM_MINMAX)
+                np.right_shift(a, 8, a)
+                cls.frame = cv2.imencode('.jpg', np.uint8(a))[1].tobytes()
+
+                if cls.should_stop():
+                    break
         else:  # Default to default system camera device
             capture = cv2.VideoCapture(0)
             success, frame = capture.read()
