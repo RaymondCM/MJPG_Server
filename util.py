@@ -27,3 +27,7 @@ def thermal():
 
 def default():
     return "cv"
+
+
+def lepton_in(modules):
+    return "pylepton.Lepton3" in modules
