@@ -20,7 +20,7 @@ class Camera(object):
 
     def initialize(self, device_type="auto"):
         if device_type == "auto":
-            self.device_type = "pi" if is_linux() else "cv"
+            Camera.device_type = "pi" if is_linux() else "cv"
 
         if Camera.thread is None:
             Camera.thread = threading.Thread(target=self._thread)
