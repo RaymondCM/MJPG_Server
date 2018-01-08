@@ -1,10 +1,11 @@
 #!/usr/bin/python
+import argparse
 import socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from urlparse import urlparse
 from camera import Camera
-from time import sleep
+from time import sleep  # Removed sleep from mjpeg do_GET loop
 
 
 class CamHandler(BaseHTTPRequestHandler):
@@ -43,12 +44,19 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main():
-    ip = "0.0.0.0"
-    port = 8080
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-b", default="0.0.0.0", help="Server IP Address [Default 0.0.0.0]", dest="ip", type=str)
+    parser.add_argument("-p", default=8080, help="Server Port [Default: 8080]", dest="port", type=int)
+    parser.add_argument("-d", default="auto", help="Device Type [Default:auto] (pi|lepton|cv)", dest="device", type=str)
+    results = parser.parse_args()
+
+    ip = results.ip
+    port = results.port
+    device_type = results.device
 
     try:
         camera = Camera()
-        Camera.initialize(camera)
+        Camera.initialize(camera, device_type)
 
         def handler(*args):
             CamHandler(camera, *args)
