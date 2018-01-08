@@ -35,9 +35,9 @@ class Camera(object):
         Camera.last_access = datetime.now()
         return self.frame
 
-    @staticmethod
-    def schedule_stop():
-        Camera.thread.stop_event.set()
+    def schedule_stop(self):
+        if self.thread is not None:
+            self.thread.stop_event.set()
 
     @staticmethod
     def should_stop(timeout=10):
