@@ -9,9 +9,9 @@ from util import default, raspberrypi, is_linux, thermal, lepton_in
 
 if is_linux():
     try:
+        import picamera
         from pylepton.Lepton3 import Lepton3
         import cv2
-        import picamera
     except ImportError:
         pass
 else:
