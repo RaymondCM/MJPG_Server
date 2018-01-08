@@ -15,3 +15,15 @@ def is_osx():
 
 def is_bsd():
     return platform == "freebsd7" or platform == "freebsd8" or platform == "freebsdN"
+
+
+def raspberrypi():
+    return "pi"
+
+
+def thermal():
+    return "lepton"
+
+
+def default():
+    return "cv"
