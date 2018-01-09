@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 import argparse
 import socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -9,9 +10,9 @@ from time import sleep  # Removed sleep from mjpeg do_GET loop
 
 
 class CamHandler(BaseHTTPRequestHandler):
-    def __init__(self, capture, *args):
+    def __init__(self, capture, content, *args):
         self.capture = capture
-        self.content = open('index.html', 'r').read()
+        self.content = content
         BaseHTTPRequestHandler.__init__(self, *args)
 
     def do_GET(self):
@@ -57,8 +58,10 @@ def server():
     camera = Camera()
     error = Camera.initialize(camera, device_type)
 
+    content = open('{}/index.html'.format(os.path.dirname(os.path.realpath(__file__))), 'r').read()
+
     def handler(*args):
-        CamHandler(camera, *args)
+        CamHandler(camera, content, *args)
 
     threaded_server = ThreadedHTTPServer((ip, port), handler)
 
