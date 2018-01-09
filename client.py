@@ -101,12 +101,11 @@ def client():
             rospy.spin()
         else:
             print("Press q in the rendering window to exit")
-            window_name = "Client Preview"
-            cv2.namedWindow(window_name)
+            cv2.namedWindow(name)
 
             while True:
                 if decoder_thread.new_frame:
-                    cv2.imshow(window_name, decoder_thread.frame if wait_for_frame else decoder_thread.get_frame())
+                    cv2.imshow(name, decoder_thread.frame if wait_for_frame else decoder_thread.get_frame())
 
                 key = cv2.waitKey(1)
                 if key == ord('q') or key == ord('Q'):
