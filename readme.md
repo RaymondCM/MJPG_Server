@@ -43,7 +43,7 @@ To use the FLIR thermal camera run the following command in the project root (Su
 
 ```bash
 cd MJPG_Server
-https://github.com/RaymondKirk/pylepton.git --depth 1
+git clone https://github.com/RaymondKirk/pylepton.git --depth 1
 ```
 
 To use the pi-camera ensure the package is installed and up to-date.
