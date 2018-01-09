@@ -54,16 +54,16 @@ def server():
     port = results.port
     device_type = results.device
 
+    camera = Camera()
+    error = Camera.initialize(camera, device_type)
+
+    def handler(*args):
+        CamHandler(camera, *args)
+
+    threaded_server = ThreadedHTTPServer((ip, port), handler)
+
     try:
-        camera = Camera()
-        error = Camera.initialize(camera, device_type)
-
         if not error:
-            def handler(*args):
-                CamHandler(camera, *args)
-
-            threaded_server = ThreadedHTTPServer((ip, port), handler)
-
             print("Server Started on " + ip + ":" + str(port))
             threaded_server.serve_forever()
         else:

@@ -8,8 +8,9 @@ import numpy as np
 from util import default, raspberrypi, is_linux, thermal, lepton_in
 
 if is_linux():
+    import picamera
+
     try:
-        import picamera
         from pylepton.Lepton3 import Lepton3
         import cv2
     except ImportError:
