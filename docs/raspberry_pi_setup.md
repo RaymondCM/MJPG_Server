@@ -1,4 +1,4 @@
-# Installation instructions for the raspberry pi
+# Installation instructions for the Raspberry Pi
 
 # Installation
 Install the necessary dependencies, some are optional.

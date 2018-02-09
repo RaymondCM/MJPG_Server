@@ -62,4 +62,4 @@ pip install opencv-python
 
 ## Raspberry Pi Setup
 
-To setup on a Raspberry Pi, follow these instructions [Raspberry Pi Setup](./docs/raspberry_pi_setup.md).
+To setup on a Raspberry Pi, follow these instructions [Raspberry Pi Setup](raspberry_pi_setup.md).
