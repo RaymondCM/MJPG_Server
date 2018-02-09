@@ -46,7 +46,7 @@ cd MJPG_Server
 git clone https://github.com/RaymondKirk/pylepton.git --depth 1
 ```
 
-To use the pi-camera ensure the package is installed and up to-date.
+To use the pi-camera ensure the package is installed and up to-date. 
 
 ```bash
 sudo apt-get update
@@ -59,3 +59,7 @@ To use USB camera devices or in-built ones, or to use the client python script, 
 ```bash
 pip install opencv-python
 ```
+
+## Raspberry Pi Setup
+
+To setup on a Raspberry Pi, follow these instructions [Raspberry Pi Setup](./docs/raspberry_pi_setup.md).
