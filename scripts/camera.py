@@ -28,10 +28,13 @@ class Camera(object):
     height = 240
     size = height * width
 
-    def initialize(self, device_type="auto"):
+    def initialize(self, device_type="auto", width=320, height=240):
         Camera.device_type = device_type
         if device_type == "auto":
             Camera.device_type = thermal() if lepton_in(modules) else raspberrypi() if is_linux() else default()
+
+        self.width = width
+        self.height = height
 
         if Camera.thread is None:
             Camera.thread = threading.Thread(target=self._thread)

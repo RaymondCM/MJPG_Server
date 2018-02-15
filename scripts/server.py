@@ -49,6 +49,8 @@ def server():
     parser.add_argument("-b", default="0.0.0.0", help="Server IP Address [Default 0.0.0.0]", dest="ip", type=str)
     parser.add_argument("-p", default=8080, help="Server Port [Default: 8080]", dest="port", type=int)
     parser.add_argument("-d", default="auto", help="Device Type [Default:auto] (pi|lepton|cv)", dest="device", type=str)
+    parser.add_argument("-w", default=320, help="RPi Width [Default:320]", dest="rpi_width", type=int)
+    parser.add_argument("-h", default=240, help="RPi Height [Default:240]", dest="rpi_height", type=int)
     results = parser.parse_args()
 
     ip = results.ip
