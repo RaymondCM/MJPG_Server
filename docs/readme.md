@@ -17,6 +17,8 @@ optional arguments:
   -b IP       Server IP Address [Default 0.0.0.0]
   -p PORT     Server Port [Default: 8080]
   -d DEVICE   Device Type [Default:auto] (pi|lepton|cv)
+  -w WIDTH    RPi Width [Default:320] 
+  -h HEIGHT   RPi Height [Default:240]
 ```
 
 Run the client python script on any other machine on the network to preview the camera. 
